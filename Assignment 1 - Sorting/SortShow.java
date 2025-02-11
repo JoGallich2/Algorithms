@@ -108,39 +108,88 @@ public class SortShow extends JPanel {
 		}
 		
 	///////////////////////////////////////////////////////////////////////////////////
-		
+
 		//recursive merge sort method
 		public void R_MergeSort(){
 			//getting the date and time when the recursive merge sort starts
 			Calendar start = Calendar.getInstance();
 			//assigning the size for the tempArray below
-
-			//You need to complete this part.
+			tempArray = new int[total_number_of_lines];
+			R_MergeSort(0, total_number_of_lines - 1);
 
 			Calendar end = Calendar.getInstance();
 			//getting the time it took for the iterative merge sort to execute
 			//subtracting the end time with the start time
-	        SortGUI.rmergeTime = end.getTime().getTime() - start.getTime().getTime();
-			
+			SortGUI.rmergeTime = end.getTime().getTime() - start.getTime().getTime();
 		}
-		
+
 		//recursive merge sort method
 		public void R_MergeSort(int first, int last){
 			if(first < last){
+				//Identify the index of the middle
+				int mid = (first + last) / 2;
 
-				//You need to complete this part.
+				//Recursively call Merge sort for the first half of the array
+				R_MergeSort(first, mid);
+				//Recursively call Merge sort for the second half of the array
+				R_MergeSort(mid + 1, last);
 
+				//Merge the two sorted halves
+				R_Merge(first, mid, last);
+
+				//Draw the updated array
+				paintComponent(this.getGraphics());
 				//Causing a delay for 10ms
-				//delay(10);
+				delay(10);
 			}
 		}
 
-		
+
 		//recursive merge sort method
 		public void R_Merge(int first, int mid, int last){
+			//Define subarray indices
+			int beginHalf1 = first;
+			int endHalf1 = mid;
+			int beginHalf2 = mid + 1;
+			int endHalf2 = last;
 
-			//You need to complete this part.
-				
+			//Create temporary array to store merged result
+			// Create index for tempArray
+			int[] tempArray = new int[last - first + 1];
+			int index = 0;
+
+			// while both subarrrays have elements compare
+			while (beginHalf1 <= endHalf1 && beginHalf2 <= endHalf2) {
+				// Compare elements
+				if (lines_lengths[beginHalf1] <= lines_lengths[beginHalf2]) {
+					//copy smaller element into tempArray
+					tempArray[index] = lines_lengths[beginHalf1];
+					beginHalf1++;
+				} else {
+					tempArray[index] = lines_lengths[beginHalf2];
+					beginHalf2++;
+				}
+				index++;
+			}
+
+			// Copy remaining elements from the first half
+			while (beginHalf1 <= endHalf1) {
+				tempArray[index] = lines_lengths[beginHalf1];
+				beginHalf1++;
+				index++;
+			}
+
+			// Copy remaining elements from the second half
+			while (beginHalf2 <= endHalf2) {
+				tempArray[index] = lines_lengths[beginHalf2];
+				beginHalf2++;
+				index++;
+			}
+
+			// Copy merged elements back into array
+			for (int i = 0; i < tempArray.length; i++) {
+				lines_lengths[first + i] = tempArray[i];
+			}
 		}
 		
 		//
