@@ -73,7 +73,16 @@ public class SortShow extends JPanel {
 			Calendar start = Calendar.getInstance();
 			//Using the selection sort to lines_lengths sort the array
 
-			//You need to complete this part.
+			for(int i = 0; i < total_number_of_lines - 1; i++){
+				//Get the minimum index from current point to the end of the array
+				int min_index = getIndexOfSmallest(i, total_number_of_lines-1);
+				//Swap min index with the current index
+				swap(i, min_index);
+				//Draw the swap that has occurred
+				paintComponent(this.getGraphics());
+				//Causing a delay for 10ms
+				delay(10);
+			}
 
 			//getting the date and time when the selection sort ends
 			Calendar end = Calendar.getInstance();
