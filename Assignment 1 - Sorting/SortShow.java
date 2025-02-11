@@ -84,10 +84,18 @@ public class SortShow extends JPanel {
 		
 		//this method gets the smallest element in the array of lines_lengths
 		public int getIndexOfSmallest(int first, int last){
+			//Set the minimum index to the first element of the array
+			int minIndex = first;
 
-			//You need to complete this part.
+			//Run a loop to go through the entire list
+			for(int i = first + 1; i <= last; i++) {
+				//If the current index is smaller than the previously found min, set the new min
+				if (lines_lengths[i] < lines_lengths[minIndex]) {
+					minIndex = i;
+				}
 
-			return 1; //modify this line
+			}
+			return minIndex; //modify this line
 		}
 		
 	///////////////////////////////////////////////////////////////////////////////////
