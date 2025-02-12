@@ -110,11 +110,6 @@ public class SortShow extends JPanel {
 	///////////////////////////////////////////////////////////////////////////////////
 
 
-
-
-
-	///////////////////////////////////////////////////////////////////////////////////
-
 		//recursive merge sort method
 		public void R_MergeSort(){
 			//getting the date and time when the recursive merge sort starts
@@ -309,8 +304,73 @@ public class SortShow extends JPanel {
 			lines_lengths[index] = tempArray[index];
 	}
 
-	//////////////////////////////////////////////////////////////////////	
-		
+	//////////////////////////////////////////////////////////////////////
+
+	public void BubbleSort(){
+		//getting the date and time when the Bubble sort starts
+		Calendar start = Calendar.getInstance();
+
+		//getting the date and time when the Bubble sort ends
+		Calendar end = Calendar.getInstance();
+		//getting the time it took for the Bubble sort to execute
+		//subtracting the end time with the start time
+		SortGUI.selectionTime = end.getTime().getTime() - start.getTime().getTime();
+	}
+
+	//////////////////////////////////////////////////////////////////////
+
+	public void InsertionSort(){
+		//getting the date and time when the Insertion sort starts
+		Calendar start = Calendar.getInstance();
+
+		//getting the date and time when the Insertion sort ends
+		Calendar end = Calendar.getInstance();
+		//getting the time it took for the Insertion sort to execute
+		//subtracting the end time with the start time
+		SortGUI.selectionTime = end.getTime().getTime() - start.getTime().getTime();
+	}
+
+	//////////////////////////////////////////////////////////////////////
+
+	public void ShellSort(){
+		//getting the date and time when the Shell sort starts
+		Calendar start = Calendar.getInstance();
+
+		//getting the date and time when the Shell sort ends
+		Calendar end = Calendar.getInstance();
+		//getting the time it took for the Shell sort to execute
+		//subtracting the end time with the start time
+		SortGUI.selectionTime = end.getTime().getTime() - start.getTime().getTime();
+	}
+
+	//////////////////////////////////////////////////////////////////////
+
+	public void QuickSort(){
+		//getting the date and time when the Quick sort starts
+		Calendar start = Calendar.getInstance();
+
+		//getting the date and time when the Quick sort ends
+		Calendar end = Calendar.getInstance();
+		//getting the time it took for the Quick sort to execute
+		//subtracting the end time with the start time
+		SortGUI.selectionTime = end.getTime().getTime() - start.getTime().getTime();
+	}
+
+	//////////////////////////////////////////////////////////////////////
+
+	public void RadixSort(){
+		//getting the date and time when the Radix sort starts
+		Calendar start = Calendar.getInstance();
+
+		//getting the date and time when the Radix sort ends
+		Calendar end = Calendar.getInstance();
+		//getting the time it took for the Radix sort to execute
+		//subtracting the end time with the start time
+		SortGUI.selectionTime = end.getTime().getTime() - start.getTime().getTime();
+	}
+
+	///////////////////////////////////////////////////////////////////////////////////
+
 		//This method resets the window to the scrambled lines display
 		public void reset(){
 			if(scramble_lines != null)
