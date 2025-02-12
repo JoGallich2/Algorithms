@@ -254,7 +254,7 @@ public class SortGUI {
 			//placing the sortArea object in the center of the window
 			add(sortArea, BorderLayout.CENTER);
 			//setting all booleans to false
-			Set_Available_Chooses(false, false, false, false);
+			Set_Available_Chooses(false, false, false, false,false, false, false, false, false);
 
 			//The following code is for creating a listener for each GUI element 
 
@@ -268,7 +268,7 @@ public class SortGUI {
 					//Since it has already been clicked, it will no longer be enabled
 					scramble_button.setEnabled(false); 
 					//setting all booleans true except for reset
-					Set_Available_Chooses(true, true, true, false);
+					Set_Available_Chooses(true, true, true, true,true, true, true, true, false);
 				}
 			});
 
@@ -282,8 +282,7 @@ public class SortGUI {
 					//The amount of time taken for selection sort took
 					selection_time_taken.setText(selectionTime / 1000 + " Seconds");
 					//setting all booleans false except for reset
-					Set_Available_Chooses(false, false, false, true);
-				}
+					Set_Available_Chooses(false, false, false, false, false, false, false, false, true);				}
 			});
 
 			//Creating an action listener for recursive merge button
@@ -296,8 +295,7 @@ public class SortGUI {
 					//recursive merge sort has finished/been clicked
 					Recersive_Merge_Done = true;
 					//setting all booleans false except for reset
-					Set_Available_Chooses(false, false, false, true);
-				}
+					Set_Available_Chooses(false, false, false, false, false, false, false, false, true);				}
 			});
 			
 			//Creating an action listener for iterative merge button
@@ -310,63 +308,153 @@ public class SortGUI {
 					//iterative merge sort has finished/been clicked
 					Iterative_Merge_Done = true;
 					//setting all booleans false except for reset
-					Set_Available_Chooses(false, false, false, true);
+					Set_Available_Chooses(false, false, false, false, false, false, false, false, true);				}
+			});
+
+			//New action listeners for addition sorting methods
+			// Creating an action listener for bubble sort button
+			bubble.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					// Sorting the array using Bubble Sort
+					sortArea.BubbleSort();
+					// Display the time taken for Bubble Sort
+					bubble_time_taken.setText(BubbleTime / 1000 + " Seconds");
+					// Bubble sort has finished/been clicked
+					Bubble_Done = true;
+					// Disable other options except reset
+					Set_Available_Chooses(false, false, false, false, false, false, false, false, true);				}
+			});
+			// Creating an action listener for insertion sort button
+			insertion.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					// Sorting the array using Insertion Sort
+					sortArea.InsertionSort();
+					// Display the time taken for Insertion Sort
+					insertion_time_taken.setText(InsertionTime / 1000 + " Seconds");
+					// Insertion sort has finished/been clicked
+					Insertion_Done = true;
+					// Disable other options except reset
+					Set_Available_Chooses(false, false, false, false, false, false, false, false, true);				}
+			});
+			// Creating an action listener for shell sort button
+			shell.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					// Sorting the array using Shell Sort
+					sortArea.ShellSort();
+					// Display the time taken for Shell Sort
+					shell_time_taken.setText(ShellTime / 1000 + " Seconds");
+					// Shell sort has finished/been clicked
+					Shell_Done = true;
+					// Disable other options except reset
+					Set_Available_Chooses(false, false, false, false, false, false, false, false, true);				}
+			});
+			// Creating an action listener for quick sort button
+			quick.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					// Sorting the array using Quick Sort
+					sortArea.QuickSort();
+					// Display the time taken for Quick Sort
+					quick_time_taken.setText(QuickTime / 1000 + " Seconds");
+					// Quick sort has finished/been clicked
+					Quick_Done = true;
+					// Disable other options except reset
+					Set_Available_Chooses(false, false, false, false, false, false, false, false, true);				}
+			});
+			// Creating an action listener for radix sort button
+			radix.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					// Sorting the array using Radix Sort
+					sortArea.RadixSort();
+					// Display the time taken for Radix Sort
+					radix_time_taken.setText(Radixtime / 1000 + " Seconds");
+					// Radix sort has finished/been clicked
+					Radix_Done = true;
+					// Disable other options except reset
+					Set_Available_Chooses(false, false, false, false, false, false, false, false, true);
 				}
 			});
 
-			//Creating an action listener for reset button
+
+
+			// Creating an action listener for reset button
 			reset.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					//disabling reset since it was clicked
+					// Disabling reset since it was clicked
 					reset.setEnabled(false);
-					//reseting the lines_lengths to its scrambled lines
+					// Resetting the lines_lengths to its scrambled lines
 					sortArea.reset();
 
-					//There are many different combinations of what could be clicked 
-					//The following code below covers all possibilities
-					//FOr the following use the same comments as above 
-					if (Selection_Done && Recersive_Merge_Done && Iterative_Merge_Done) {
-						//
+					// Reset all sorting completion flags and UI elements
+					boolean enableSelection = true;
+					boolean enableRMerge = true;
+					boolean enableIMerge = true;
+					boolean enableBubble = true;
+					boolean enableInsertion = true;
+					boolean enableShell = true;
+					boolean enableQuick = true;
+					boolean enableRadix = true;
+
+					// Re-enable scramble button if at least one sorting algorithm was completed
+					if (Selection_Done || Recersive_Merge_Done || Iterative_Merge_Done || Bubble_Done ||
+							Insertion_Done || Shell_Done || Quick_Done || Radix_Done) {
 						scramble_button.setEnabled(true);
-						Recersive_Merge_Done = false;
-						Iterative_Merge_Done = false;
-						Selection_Done = false;
-						Set_Available_Chooses(false, false, false, false);
+					}
+
+					if (Selection_Done && Recersive_Merge_Done && Iterative_Merge_Done && Bubble_Done &&
+							Insertion_Done && Shell_Done && Quick_Done && Radix_Done) {
 						selection_time_taken.setText("");
 						rmerge_time_taken.setText("");
 						imerge_time_taken.setText("");
-						
-					} else if (Recersive_Merge_Done && Iterative_Merge_Done) {
-						Set_Available_Chooses(true, false, false, false);
+						bubble_time_taken.setText("");
+						insertion_time_taken.setText("");
+						shell_time_taken.setText("");
+						quick_time_taken.setText("");
+						radix_time_taken.setText("");
 
-					} else if (Selection_Done && Recersive_Merge_Done) {
-						
-						Set_Available_Chooses(false, false, true, false);
-
-					} else if (Selection_Done && Iterative_Merge_Done) {
-						Set_Available_Chooses(false, true, false, false);
-
-					} else if (Selection_Done) {
-						Set_Available_Chooses(false, true, true, false);
-
-					} else if (Recersive_Merge_Done) {
-						Set_Available_Chooses(true, false, true, false);
-
-					} else {
-						Set_Available_Chooses(true, true, false, false);
-
+						// Reset completion flags
+						Selection_Done = false;
+						Recersive_Merge_Done = false;
+						Iterative_Merge_Done = false;
+						Bubble_Done = false;
+						Insertion_Done = false;
+						Shell_Done = false;
+						Quick_Done = false;
+						Radix_Done = false;
 					}
+
+					// Determine which sorting options should be re-enabled based on what was done
+					if (Selection_Done) enableSelection = false;
+					if (Recersive_Merge_Done) enableRMerge = false;
+					if (Iterative_Merge_Done) enableIMerge = false;
+					if (Bubble_Done) enableBubble = false;
+					if (Insertion_Done) enableInsertion = false;
+					if (Shell_Done) enableShell = false;
+					if (Quick_Done) enableQuick = false;
+					if (Radix_Done) enableRadix = false;
+
+
+					// Update available choices dynamically
+					Set_Available_Chooses(enableSelection, enableRMerge, enableIMerge, enableBubble,
+							enableInsertion, enableShell, enableQuick, enableRadix, false);
 				}
 			});
+
 
 		}
 
 		//A method that sets if the button are enabled or disabled
 		public void Set_Available_Chooses(boolean selection_state, boolean rmerge_state, boolean imerge_state,
-				boolean reset_state) {
+										  boolean bubble_state, boolean insertion_state,
+										  boolean shell_state, boolean quick_state, boolean radix_state,
+										  boolean reset_state) {
 			this.selection.setEnabled(selection_state);
 			this.rmerge.setEnabled(rmerge_state);
 			this.imerge.setEnabled(imerge_state);
+			this.bubble.setEnabled(bubble_state);
+			this.insertion.setEnabled(insertion_state);
+			this.shell.setEnabled(shell_state);
+			this.quick.setEnabled(quick_state);
+			this.radix.setEnabled(radix_state);
 			this.reset.setEnabled(reset_state);
 		}
 	}
