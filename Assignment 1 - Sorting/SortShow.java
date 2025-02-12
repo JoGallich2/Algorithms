@@ -7,8 +7,7 @@
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Calendar;
-import java.util.Random;
+import java.util.*;
 
 //The class that has all the sorts in it
 public class SortShow extends JPanel { 
@@ -159,7 +158,7 @@ public class SortShow extends JPanel {
 			int[] tempArray = new int[last - first + 1];
 			int index = 0;
 
-			// while both subarrrays have elements compare
+			// while both subarrays have elements compare
 			while (beginHalf1 <= endHalf1 && beginHalf2 <= endHalf2) {
 				// Compare elements
 				if (lines_lengths[beginHalf1] <= lines_lengths[beginHalf2]) {
@@ -314,7 +313,7 @@ public class SortShow extends JPanel {
 		Calendar end = Calendar.getInstance();
 		//getting the time it took for the Bubble sort to execute
 		//subtracting the end time with the start time
-		SortGUI.selectionTime = end.getTime().getTime() - start.getTime().getTime();
+		SortGUI.BubbleTime = end.getTime().getTime() - start.getTime().getTime();
 	}
 
 	//////////////////////////////////////////////////////////////////////
@@ -327,7 +326,7 @@ public class SortShow extends JPanel {
 		Calendar end = Calendar.getInstance();
 		//getting the time it took for the Insertion sort to execute
 		//subtracting the end time with the start time
-		SortGUI.selectionTime = end.getTime().getTime() - start.getTime().getTime();
+		SortGUI.InsertionTime = end.getTime().getTime() - start.getTime().getTime();
 	}
 
 	//////////////////////////////////////////////////////////////////////
@@ -340,7 +339,7 @@ public class SortShow extends JPanel {
 		Calendar end = Calendar.getInstance();
 		//getting the time it took for the Shell sort to execute
 		//subtracting the end time with the start time
-		SortGUI.selectionTime = end.getTime().getTime() - start.getTime().getTime();
+		SortGUI.ShellTime = end.getTime().getTime() - start.getTime().getTime();
 	}
 
 	//////////////////////////////////////////////////////////////////////
@@ -349,24 +348,121 @@ public class SortShow extends JPanel {
 		//getting the date and time when the Quick sort starts
 		Calendar start = Calendar.getInstance();
 
+		//Call quickSort()
+		QuickSort(0, total_number_of_lines-1);
+
 		//getting the date and time when the Quick sort ends
 		Calendar end = Calendar.getInstance();
 		//getting the time it took for the Quick sort to execute
 		//subtracting the end time with the start time
-		SortGUI.selectionTime = end.getTime().getTime() - start.getTime().getTime();
+		SortGUI.QuickTime = end.getTime().getTime() - start.getTime().getTime();
+	}
+
+	public void QuickSort(int left, int right){
+		//If left greater than/equal to right, return.
+		if (left >= right) {
+			return;
+		}
+		//Get pivot (the rightmost element in the array)
+		int pivot = lines_lengths[right];
+		//Set an extra left and right index that will be incremented/decremented
+		int l = left;
+		int r = right - 1;
+
+		while (l <= r) {
+			//While the indices have not crossed, and the l index element is less than/equal to the pivot, increment l.
+			while(l <= r && lines_lengths[l] <= pivot) {
+				l++;
+			}
+			//While the indices have not crossed, and the r index element is greater than the pivot, decrement r.
+			while(l <= r && lines_lengths[r] > pivot) {
+				r--;
+			}
+			//After the whiles, if l < r, swap the elements at l and r. (And print to screen to show change)
+			if(l<r) {
+				swap(l, r);
+
+				//Draw the updated array
+				paintComponent(this.getGraphics());
+				//Causing a delay for 10ms
+				delay(10);
+			}
+		}
+		//After partition, swap pivot and l.
+		swap(l, right);
+
+		//Draw the updated array
+		paintComponent(this.getGraphics());
+		//Causing a delay for 10ms
+		delay(10);
+
+		//Recursively sort left and right subarrays.
+		QuickSort(left, l-1);
+		QuickSort(l+1, right);
 	}
 
 	//////////////////////////////////////////////////////////////////////
 
+	//Get the max element of the array to determine how many numbers in the max element.
+	private int getMax() {
+		int max = lines_lengths[0];
+		for(int i = 0; i < total_number_of_lines; i++) {
+			if(lines_lengths[i] > max) {
+				max = lines_lengths[i];
+			}
+		}
+		return max;
+	}
+
+	//Bucket sort subroutine for Radix Sort. Exponent for sorting buckets into digit specific buckets.
+	private void BucketSort(int exp) {
+		//Get array length.
+		int n = total_number_of_lines;
+
+		//Create buckets and subbuckets for sorting.
+		ArrayList<Integer>[] buckets = new ArrayList[10];
+		for (int i = 0; i < 10; i++) {
+			buckets[i] = new ArrayList<>();
+		}
+
+		//Add numbers to respective digit buckets.
+		for(int number : lines_lengths) {
+			int digit = (number / exp) % 10;
+			buckets[digit].add(number);
+		}
+
+		//For all numbers in buckets, put them back into the array. (And print to screen to show change)
+		int index = 0;
+		for (int i = 0; i < 10; i++) {
+			for (int number : buckets[i]) {
+				lines_lengths[index] = number;
+				index += 1;
+
+				//Draw the updated array
+				paintComponent(this.getGraphics());
+				//Causing a delay for 10ms
+				delay(10);
+			}
+		}
+	}
+
+	//Radix Sort method.
 	public void RadixSort(){
 		//getting the date and time when the Radix sort starts
 		Calendar start = Calendar.getInstance();
+
+		//Get the max element of the array to see how many digits in the number.
+		int max = getMax();
+		//For each digit in the largest number, sort the numbers of the array.
+		for(int exp = 1; max/exp > 0; exp *= 10) {
+			BucketSort(exp);
+		}
 
 		//getting the date and time when the Radix sort ends
 		Calendar end = Calendar.getInstance();
 		//getting the time it took for the Radix sort to execute
 		//subtracting the end time with the start time
-		SortGUI.selectionTime = end.getTime().getTime() - start.getTime().getTime();
+		SortGUI.Radixtime = end.getTime().getTime() - start.getTime().getTime();
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////
