@@ -309,6 +309,20 @@ public class SortShow extends JPanel {
 		//getting the date and time when the Bubble sort starts
 		Calendar start = Calendar.getInstance();
 
+		for (int i = 0; i < total_number_of_lines - 1; i++) {
+			for (int j = 0; j < total_number_of_lines - i - 1; j++) {
+				if (lines_lengths[j] > lines_lengths[j+1]) {
+					int temp = lines_lengths[j];
+					lines_lengths[j] = lines_lengths[j+1];
+					lines_lengths[j+1] = temp;
+					//Draw the swap that has occurred
+					paintComponent(this.getGraphics());
+					//Causing a delay for 10ms
+					delay(10);
+				}
+			}
+		}
+
 		//getting the date and time when the Bubble sort ends
 		Calendar end = Calendar.getInstance();
 		//getting the time it took for the Bubble sort to execute
@@ -316,11 +330,26 @@ public class SortShow extends JPanel {
 		SortGUI.BubbleTime = end.getTime().getTime() - start.getTime().getTime();
 	}
 
+
 	//////////////////////////////////////////////////////////////////////
 
 	public void InsertionSort(){
 		//getting the date and time when the Insertion sort starts
 		Calendar start = Calendar.getInstance();
+
+		for(int i = 1; i < total_number_of_lines; i++){
+			int key = lines_lengths[i];
+			int j = i - 1;
+			while(j >= 0 && lines_lengths[j] > key){
+				lines_lengths[j + 1] = lines_lengths[j];
+				j = j - 1;
+			}
+			lines_lengths[j + 1] = key;
+
+			paintComponent(this.getGraphics());
+			//Causing a delay for 10ms
+			delay(10);
+		}
 
 		//getting the date and time when the Insertion sort ends
 		Calendar end = Calendar.getInstance();
@@ -334,6 +363,21 @@ public class SortShow extends JPanel {
 	public void ShellSort(){
 		//getting the date and time when the Shell sort starts
 		Calendar start = Calendar.getInstance();
+
+		for(int gap = total_number_of_lines/2; gap > 0; gap /= 2){
+			for(int i = gap; i < total_number_of_lines; i++) {
+				int temp = lines_lengths[i];
+				int j;
+				for(j = i; j >= gap && lines_lengths[j-gap] > temp; j -= gap) {
+					lines_lengths[j] = lines_lengths[j-gap];
+					lines_lengths[j] = lines_lengths[j-gap];
+				}
+				lines_lengths[j] = temp;
+			}
+			paintComponent(this.getGraphics());
+			//Causing a delay for 10ms
+			delay(10);
+		}
 
 		//getting the date and time when the Shell sort ends
 		Calendar end = Calendar.getInstance();
