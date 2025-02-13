@@ -57,7 +57,7 @@ public class SortGUI {
 
 	//Making a object from the class SortShow
 	SortShow sortArea = new SortShow();
-	
+
 	//Default constructor for SortGUI
 	public SortGUI() {
 		//making a MyScreen object
@@ -68,9 +68,11 @@ public class SortGUI {
 		//Setting a title to the GUI window
 		screen.setTitle("Assignment-1 by Abdelnasser Ouda");
 		//setting the size of the window 
-		screen.setSize(975+sortArea.total_number_of_lines, 450);
+		screen.setSize(975+sortArea.total_number_of_lines, 1080);
 		//the operation when the frame is closed
 		screen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		// Center window on screen
+		screen.setLocationRelativeTo(null);
 		//is set to true to display the frame
 		screen.setVisible(true);
 	}
@@ -100,10 +102,10 @@ public class SortGUI {
 		JRadioButton radix = new JRadioButton("Radix");
 
 
-		//A label that displays the time it took for the Selection sort took to execute 
+		//A label that displays the time it took for the Selection sort took to execute
 		JLabel selection_time_label = new JLabel("Selection Time");
-		JLabel selection_time_taken = new JLabel(""); 
-		//A label that displays the time it took for the recursive merge sort took to execute 
+		JLabel selection_time_taken = new JLabel("");
+		//A label that displays the time it took for the recursive merge sort took to execute
 		JLabel rmerge_time_label = new JLabel("Merge-Rec Time");
 		JLabel rmerge_time_taken = new JLabel("");
 		//A label that displays the time it took for the iterative merge sort took to execute
@@ -199,7 +201,7 @@ public class SortGUI {
 
 			//Adding the reset button to the radio_button_selection_Panel
 			radio_button_selection_Panel.add(reset);
-			//giving the radio_button_selection_Panel a border with a title 
+			//giving the radio_button_selection_Panel a border with a title
 			radio_button_selection_Panel.setBorder(new javax.swing.border.TitledBorder("Sort Algorithms"));
 
 			//A Panel to hold the time_Panel and set the GridLayout
@@ -209,7 +211,7 @@ public class SortGUI {
 			//Adding the selection_time_taken to the time_Panel
 			time_Panel.add(selection_time_taken);
 			//Adding the rmerge_time_label to the time_Panel
-			time_Panel.add(rmerge_time_label); 
+			time_Panel.add(rmerge_time_label);
 			//Adding the rmerge_time_taken to the time_Panel
 			time_Panel.add(rmerge_time_taken);
 			//Adding the imerge_time_label to the time_Panel
@@ -256,7 +258,7 @@ public class SortGUI {
 			//setting all booleans to false
 			Set_Available_Chooses(false, false, false, false,false, false, false, false, false);
 
-			//The following code is for creating a listener for each GUI element 
+			//The following code is for creating a listener for each GUI element
 
 			//Creating an action listener for scramble button
 			//This button will be used to scramble the lines in a random way
@@ -264,9 +266,9 @@ public class SortGUI {
 			scramble_button.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					// Scrambling the lines_lengths array
-					sortArea.scramble_the_lines(); 
+					sortArea.scramble_the_lines();
 					//Since it has already been clicked, it will no longer be enabled
-					scramble_button.setEnabled(false); 
+					scramble_button.setEnabled(false);
 					//setting all booleans true except for reset
 					Set_Available_Chooses(true, true, true, true,true, true, true, true, false);
 				}
@@ -276,7 +278,7 @@ public class SortGUI {
 			selection.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					//Sorting the array in the selection sort method
-					sortArea.SelectionSort(); 
+					sortArea.SelectionSort();
 					//Selection sort has finished/been clicked
 					Selection_Done = true;
 					//The amount of time taken for selection sort took
@@ -297,7 +299,7 @@ public class SortGUI {
 					//setting all booleans false except for reset
 					Set_Available_Chooses(false, false, false, false, false, false, false, false, true);				}
 			});
-			
+
 			//Creating an action listener for iterative merge button
 			imerge.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -467,5 +469,3 @@ public class SortGUI {
 	}
 
 }
-
-
