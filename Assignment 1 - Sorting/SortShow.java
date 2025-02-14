@@ -131,16 +131,17 @@ public class SortShow extends JPanel {
 
 				//Recursively call Merge sort for the first half of the array
 				R_MergeSort(first, mid);
+				//Draw the updated array
+				paintComponent(this.getGraphics());
+
 				//Recursively call Merge sort for the second half of the array
 				R_MergeSort(mid + 1, last);
+				//Draw the updated array
+				paintComponent(this.getGraphics());
 
 				//Merge the two sorted halves
 				R_Merge(first, mid, last);
 
-				//Draw the updated array
-				paintComponent(this.getGraphics());
-				//Causing a delay for 10ms
-				delay(10);
 			}
 		}
 
@@ -190,6 +191,11 @@ public class SortShow extends JPanel {
 			for (int i = 0; i < tempArray.length; i++) {
 				lines_lengths[first + i] = tempArray[i];
 			}
+
+			//Draw the updated array
+			paintComponent(this.getGraphics());
+			//Causing a delay for 10ms
+			delay(10);
 		}
 		
 		//
@@ -343,12 +349,14 @@ public class SortShow extends JPanel {
 			while(j >= 0 && lines_lengths[j] > key){
 				lines_lengths[j + 1] = lines_lengths[j];
 				j = j - 1;
+				//Draw the updated array
+				paintComponent(this.getGraphics());
+				//Causing a delay for 10ms
+				delay(10);
 			}
 			lines_lengths[j + 1] = key;
-
+			//Draw the updated array
 			paintComponent(this.getGraphics());
-			//Causing a delay for 10ms
-			delay(10);
 		}
 
 		//getting the date and time when the Insertion sort ends
@@ -371,12 +379,18 @@ public class SortShow extends JPanel {
 				for(j = i; j >= gap && lines_lengths[j-gap] > temp; j -= gap) {
 					lines_lengths[j] = lines_lengths[j-gap];
 					lines_lengths[j] = lines_lengths[j-gap];
+					//Draw the updated array
+					paintComponent(this.getGraphics());
+					//Causing a delay for 10ms
+					delay(10);
+
 				}
 				lines_lengths[j] = temp;
+				//Draw the updated array
+				paintComponent(this.getGraphics());
 			}
-			paintComponent(this.getGraphics());
-			//Causing a delay for 10ms
-			delay(10);
+
+
 		}
 
 		//getting the date and time when the Shell sort ends
@@ -437,8 +451,6 @@ public class SortShow extends JPanel {
 
 		//Draw the updated array
 		paintComponent(this.getGraphics());
-		//Causing a delay for 10ms
-		delay(10);
 
 		//Recursively sort left and right subarrays.
 		QuickSort(left, l-1);
