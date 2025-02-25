@@ -154,7 +154,11 @@ public class BirdsController implements Initializable {
     }
 
     public void first() {
-        // Write this method
+        bird = database.root.getData();
+        name.setText(bird.getDataKey().getBirdName());
+        about.setText(bird.getAbout());
+        showBird();
+        //Show the size as well because he wanted us to do that.
     }
 
     public void last() {
