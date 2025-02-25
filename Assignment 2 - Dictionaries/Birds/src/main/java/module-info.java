@@ -1,8 +1,8 @@
 module assignment.birds {
     requires javafx.controls;
     requires javafx.fxml;
-    requires java.logging;
     requires javafx.media;
+    requires java.sql;
 
 
 /*
