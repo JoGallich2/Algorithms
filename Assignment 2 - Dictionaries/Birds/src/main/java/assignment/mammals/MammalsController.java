@@ -98,6 +98,11 @@ public class MammalsController implements Initializable {
             } else if (nextMammal != null) {
                 mammal = nextMammal;
                 database.root = new Node(mammal);
+                showMammal();
+            } else {
+                // If there are no previous or next mammals (in case of a single element), handle it appropriately
+                System.out.println("No more mammals to show.");
+                MammalPortal.setVisible(false);
             }
         }
     }
@@ -272,11 +277,6 @@ public class MammalsController implements Initializable {
                         description = data;
                         MammalRecord mammalRecord = new MammalRecord(new DataKey(mammalName, size), description, mammalName + ".mp3", mammalName + ".jpg");
                         database.insert(mammalRecord);
-
-                        // Print the data of the inserted mammal
-                        System.out.println("Inserted Mammal:");
-                        System.out.println("Name: " + mammalRecord.getDataKey().getMammalName());
-                        System.out.println("Size: " + mammalRecord.getDataKey().getMammalSize());
                         break;
                 }
                 line++;
