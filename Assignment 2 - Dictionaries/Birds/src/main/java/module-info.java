@@ -13,11 +13,10 @@ module assignment.birds {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
 */
-    opens assignment.birds to javafx.fxml;
-    exports assignment.birds;
-
-    //potential, maybe temporary, fix to make Mammals run.
     opens assignment.mammals to javafx.fxml;
-    exports assignment.mammals;
+    exports assignment.mammals;  // Exporting the mammals package for non-reflective access
+
+    opens assignment.birds to javafx.fxml;
+    exports assignment.birds;    // Make `assignment.birds` package accessible
 
 }
