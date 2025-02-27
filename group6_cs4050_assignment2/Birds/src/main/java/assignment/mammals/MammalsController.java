@@ -72,41 +72,48 @@ public class MammalsController implements Initializable {
     }
 
     public void delete() throws DictionaryException {
-        MammalRecord previousMammal = null;
+        if(database.isEmpty()) {
+            displayAlert("The database is empty");
+            throw new DictionaryException("The database is empty.");
+        }
+        MammalRecord nextMammal;
+        try{
+            nextMammal = database.successor(mammal.getDataKey());
+        }
+        catch (DictionaryException ex) {
+            nextMammal = null;
+        }
+
+        MammalRecord previousMammal;
         try {
             previousMammal = database.predecessor(mammal.getDataKey());
-        } catch (DictionaryException ex) {
+        }
+        catch (DictionaryException ex) {
+            previousMammal = null;
+        }
 
-        }
-        MammalRecord nextMammal = null;
-        try {
-            nextMammal = database.successor(mammal.getDataKey());
-        } catch (DictionaryException ex) {
+        database.remove(mammal.getDataKey());
 
+        if(previousMammal != null) {
+            mammal = previousMammal;
         }
-        DataKey key = mammal.getDataKey();
-        try {
-            database.remove(key);
-        } catch (DictionaryException ex) {
-            System.out.println("Error in delete "+ ex);
+        else if(nextMammal != null) {
+            mammal = nextMammal;
         }
-        if (database.isEmpty()) {
-            this.MammalPortal.setVisible(false);
-            displayAlert("No more mammals in the database to show");
-        } else {
-            if (previousMammal != null) {
-                mammal = previousMammal;
-                showMammal();
-            } else if (nextMammal != null) {
-                mammal = nextMammal;
-                database.root = new Node(mammal);
-                showMammal();
-            } else {
-                // If there are no previous or next mammals (in case of a single element), handle it appropriately
-                System.out.println("No more mammals to show.");
-                MammalPortal.setVisible(false);
+        else {
+            image.setImage(null);
+            title.setText("");
+            about.setText("");
+            sizeLabel.setText("");
+            play.setDisable(true);
+            puase.setDisable(true);
+            if (player != null) {
+                player.stop();
             }
+            displayAlert("The database is empty.");
+            return;
         }
+        showMammal();
     }
 
     private void showMammal() {
