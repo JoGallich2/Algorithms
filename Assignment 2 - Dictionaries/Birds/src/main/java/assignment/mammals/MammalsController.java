@@ -69,7 +69,7 @@ public class MammalsController implements Initializable {
         }
     }
 
-    public void delete() {
+    public void delete() throws DictionaryException {
         MammalRecord previousMammal = null;
         try {
             previousMammal = database.predecessor(mammal.getDataKey());
@@ -97,7 +97,7 @@ public class MammalsController implements Initializable {
                 showMammal();
             } else if (nextMammal != null) {
                 mammal = nextMammal;
-                showMammal();
+                database.root = new Node(mammal);
             }
         }
     }
@@ -154,7 +154,16 @@ public class MammalsController implements Initializable {
     }
 
     public void first() {
-        mammal = database.root.getData();
+        //Checks to see if the database is empty
+        if (database.isEmpty()) {
+            System.out.println("Database is empty.");
+            return;
+        }
+        try {
+            mammal = database.smallest();
+        } catch (DictionaryException e) {
+            throw new RuntimeException(e);
+        }
         name.setText(mammal.getDataKey().getMammalName());
         about.setText(mammal.getAbout());
         showMammal();
@@ -162,15 +171,66 @@ public class MammalsController implements Initializable {
     }
 
     public void last() {
-        // Write this method
+        //Checks to see if the database is empty
+        if (database.isEmpty()) {
+            System.out.println("Database is empty.");
+            return;
+        }
+        try {
+            mammal = database.largest();
+        } catch (DictionaryException e) {
+            throw new RuntimeException(e);
+        }
+        name.setText(mammal.getDataKey().getMammalName());
+        about.setText(mammal.getAbout());
+        showMammal();
+        //Show the size as well because he wanted us to do that.
     }
 
     public void next() {
-        // Write this method;
+        //Checks to see if the database is empty
+        if (database.isEmpty()) {
+            System.out.println("Database is empty.");
+            return;
+        }
+        //Checks to see if the database is empty
+        if (mammal == null) {
+            System.out.println("No current selection.");
+            return;
+        }
+
+        try {
+            MammalRecord Successor = database.successor(mammal.getDataKey());
+            mammal = Successor;
+            name.setText(mammal.getDataKey().getMammalName());
+            about.setText(mammal.getAbout());
+            showMammal();
+        } catch (DictionaryException e) {
+            System.out.println("No next mammal available.");
+        }
     }
 
     public void previous() {
-        // Write this method
+        //Checks to see if the database is empty
+        if (database.isEmpty()) {
+            System.out.println("Database is empty.");
+            return;
+        }
+        //Checks to see if the database is empty
+        if (mammal == null) {
+            System.out.println("No current selection.");
+            return;
+        }
+
+        try {
+            MammalRecord Predecessor = database.predecessor(mammal.getDataKey());
+            mammal = Predecessor;
+            name.setText(mammal.getDataKey().getMammalName());
+            about.setText(mammal.getAbout());
+            showMammal();
+        } catch (DictionaryException e) {
+            System.out.println("No next mammal available.");
+        }
     }
 
     public void play() {
@@ -210,7 +270,13 @@ public class MammalsController implements Initializable {
                         break;
                     default:
                         description = data;
-                        database.insert(new MammalRecord(new DataKey(mammalName, size), description, mammalName + ".mp3", mammalName + ".jpg"));
+                        MammalRecord mammalRecord = new MammalRecord(new DataKey(mammalName, size), description, mammalName + ".mp3", mammalName + ".jpg");
+                        database.insert(mammalRecord);
+
+                        // Print the data of the inserted mammal
+                        System.out.println("Inserted Mammal:");
+                        System.out.println("Name: " + mammalRecord.getDataKey().getMammalName());
+                        System.out.println("Size: " + mammalRecord.getDataKey().getMammalSize());
                         break;
                 }
                 line++;
