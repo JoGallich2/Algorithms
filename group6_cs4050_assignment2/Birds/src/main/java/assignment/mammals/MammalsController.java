@@ -101,15 +101,8 @@ public class MammalsController implements Initializable {
             mammal = nextMammal;
         }
         else {
-            image.setImage(null);
-            title.setText("");
-            about.setText("");
-            sizeLabel.setText("");
-            play.setDisable(true);
-            puase.setDisable(true);
-            if (player != null) {
-                player.stop();
-            }
+            database.root = new Node();
+            MammalPortal.setVisible(false);
             displayAlert("The database is empty.");
             return;
         }
