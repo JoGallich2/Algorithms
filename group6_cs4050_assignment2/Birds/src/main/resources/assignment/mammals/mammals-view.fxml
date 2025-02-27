@@ -70,6 +70,16 @@
                             </font>
 
                         </Label>
+
+                        <Label fx:id="sizeLabel" prefHeight="20.0" prefWidth="150.0" text="Size: " textFill="#0521f5">
+                            <VBox.margin>
+                                <Insets bottom="10.0" left="40.0" />
+                            </VBox.margin>
+                            <font>
+                                <Font name="System" size="16.0" />
+                            </font>
+                        </Label>
+
                         <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="795.0">
                             <VBox.margin>
                                 <Insets bottom="20.0" left="40.0" right="40.0" />

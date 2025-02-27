@@ -38,6 +38,8 @@ public class MammalsController implements Initializable {
     @FXML
     private Label title;
     @FXML
+    private Label sizeLabel;
+    @FXML
     private Label about;
     @FXML
     private Button play;
@@ -115,9 +117,12 @@ public class MammalsController implements Initializable {
         }
         String img = mammal.getImage();
         Image mammalImage = new Image("file:src/main/resources/assignment/mammals/images/" + img);
+
         image.setImage(mammalImage);
         title.setText(mammal.getDataKey().getMammalName());
         about.setText(mammal.getAbout());
+        DataKey key = mammal.getDataKey();
+        sizeLabel.setText("Size : " + String.valueOf(key.getMammalSize()));
     }
 
     private void displayAlert(String msg) {
@@ -171,8 +176,9 @@ public class MammalsController implements Initializable {
         }
         name.setText(mammal.getDataKey().getMammalName());
         about.setText(mammal.getAbout());
+        DataKey key = mammal.getDataKey();
+        sizeLabel.setText("Size : " + String.valueOf(key.getMammalSize()));
         showMammal();
-        //Show the size as well because he wanted us to do that.
     }
 
     public void last() {
@@ -188,8 +194,9 @@ public class MammalsController implements Initializable {
         }
         name.setText(mammal.getDataKey().getMammalName());
         about.setText(mammal.getAbout());
+        DataKey key = mammal.getDataKey();
+        sizeLabel.setText("Size : " + String.valueOf(key.getMammalSize()));
         showMammal();
-        //Show the size as well because he wanted us to do that.
     }
 
     public void next() {
@@ -209,6 +216,8 @@ public class MammalsController implements Initializable {
             mammal = Successor;
             name.setText(mammal.getDataKey().getMammalName());
             about.setText(mammal.getAbout());
+            DataKey key = mammal.getDataKey();
+            sizeLabel.setText("Size : " + String.valueOf(key.getMammalSize()));
             showMammal();
         } catch (DictionaryException e) {
             displayAlert("No next mammal available.");
@@ -232,6 +241,8 @@ public class MammalsController implements Initializable {
             mammal = Predecessor;
             name.setText(mammal.getDataKey().getMammalName());
             about.setText(mammal.getAbout());
+            DataKey key = mammal.getDataKey();
+            sizeLabel.setText("Size : " + String.valueOf(key.getMammalSize()));
             showMammal();
         } catch (DictionaryException e) {
             displayAlert("No previous mammal available.");
