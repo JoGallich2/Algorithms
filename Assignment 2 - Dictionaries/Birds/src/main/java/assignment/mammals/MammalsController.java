@@ -178,7 +178,7 @@ public class MammalsController implements Initializable {
     public void last() {
         //Checks to see if the database is empty
         if (database.isEmpty()) {
-            System.out.println("Database is empty.");
+            displayAlert("Database is empty.");
             return;
         }
         try {
@@ -195,10 +195,10 @@ public class MammalsController implements Initializable {
     public void next() {
         //Checks to see if the database is empty
         if (database.isEmpty()) {
-            System.out.println("Database is empty.");
+            displayAlert("Database is empty.");
             return;
         }
-        //Checks to see if the database is empty
+        //Checks to see if the current mammal is null
         if (mammal == null) {
             System.out.println("No current selection.");
             return;
@@ -211,19 +211,19 @@ public class MammalsController implements Initializable {
             about.setText(mammal.getAbout());
             showMammal();
         } catch (DictionaryException e) {
-            System.out.println("No next mammal available.");
+            displayAlert("No next mammal available.");
         }
     }
 
     public void previous() {
         //Checks to see if the database is empty
         if (database.isEmpty()) {
-            System.out.println("Database is empty.");
+            displayAlert("Database is empty.");
             return;
         }
         //Checks to see if the database is empty
         if (mammal == null) {
-            System.out.println("No current selection.");
+            displayAlert("No current selection.");
             return;
         }
 
@@ -234,7 +234,7 @@ public class MammalsController implements Initializable {
             about.setText(mammal.getAbout());
             showMammal();
         } catch (DictionaryException e) {
-            System.out.println("No next mammal available.");
+            displayAlert("No previous mammal available.");
         }
     }
 
