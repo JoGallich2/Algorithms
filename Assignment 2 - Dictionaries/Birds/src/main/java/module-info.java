@@ -15,4 +15,9 @@ module assignment.birds {
 */
     opens assignment.birds to javafx.fxml;
     exports assignment.birds;
+
+    //potential, maybe temporary, fix to make Mammals run.
+    opens assignment.mammals to javafx.fxml;
+    exports assignment.mammals;
+
 }

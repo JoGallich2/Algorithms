@@ -126,7 +126,7 @@ public class MammalsController implements Initializable {
             Stage stage = new Stage();
             stage.setScene(scene);
 
-            stage.getIcons().add(new Image("file:src/main/resources/assignment/mammalss/images/UMIcon.png"));
+            stage.getIcons().add(new Image("file:src/main/resources/assignment/mammals/images/UMIcon.png"));
             stage.setTitle("Dictionary Exception");
             controller.setAlertText(msg);
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -154,7 +154,11 @@ public class MammalsController implements Initializable {
     }
 
     public void first() {
-        // Write this method
+        mammal = database.root.getData();
+        name.setText(mammal.getDataKey().getMammalName());
+        about.setText(mammal.getAbout());
+        showMammal();
+        //Show the size as well because he wanted us to do that.
     }
 
     public void last() {
@@ -170,7 +174,7 @@ public class MammalsController implements Initializable {
     }
 
     public void play() {
-        String filename = "src/main/resources/assignment/mammalss/sounds/" + mammal.getSound();
+        String filename = "src/main/resources/assignment/mammals/sounds/" + mammal.getSound();
         media = new Media(new File(filename).toURI().toString());
         player = new MediaPlayer(media);
         play.setDisable(true);
