@@ -55,7 +55,41 @@ public class OrderedDictionary implements OrderedDictionaryADT {
      */
     @Override
     public void insert(MammalRecord r) throws DictionaryException {
-        // Write this method
+        DataKey newKey = r.getDataKey();
+
+        //If the root is empty, set the data of the root to be r.
+        if (root.isEmpty()) {
+            root = new Node(r);
+            return;
+        }
+
+        //Find a location for the new node.
+        Node parent = null;
+        Node current = root;
+        int comparison;
+        while(current != null) {
+            comparison = current.getData().getDataKey().compareTo(newKey);
+            parent = current;
+
+            if (comparison == 0) {
+                throw new DictionaryException("Key already exists in the dictionary.");
+            }
+            else if (comparison > 0) {
+                current = current.getLeftChild();
+            }
+            else {
+                current = current.getRightChild();
+            }
+        }
+
+        //Creates a new node to be inserted.
+        Node newNode = new Node(r);
+        if(newKey.compareTo(parent.getData().getDataKey()) < 0) {
+            parent.setLeftChild(newNode);
+        }
+        else {
+            parent.setRightChild(newNode);
+        }
     }
 
     /**
@@ -67,7 +101,74 @@ public class OrderedDictionary implements OrderedDictionaryADT {
      */
     @Override
     public void remove(DataKey k) throws DictionaryException {
-        // Write this method
+        Node current = root;
+        Node parent = null;
+        int comparison;
+
+        while (current != null) {
+            comparison = current.getData().getDataKey().compareTo(k);
+
+            if (comparison == 0) {
+                //Found the node.
+                break;
+            }
+
+            parent = current;
+
+            if (comparison > 0) {
+                current = current.getLeftChild();
+            }
+            else {
+                current = current.getRightChild();
+            }
+        }
+
+        if(current == null) {
+            throw new DictionaryException("Key doesn't exist in dictionary.");
+        }
+
+        //If node has no children
+        if(current.getLeftChild() == null && current.getRightChild() == null) {
+            if (current == root) {
+                root = null;
+            }
+            else if (parent.getLeftChild() == current) {
+                parent.setLeftChild(null);
+            }
+            else {
+                parent.setRightChild(null);
+            }
+        }
+
+        //If node has one child
+        else if(current.getLeftChild() == null || current.getRightChild() == null) {
+            Node child;
+            if (current.getLeftChild() != null) {
+                child = current.getLeftChild();
+            }
+            else{
+                child = current.getRightChild();
+            }
+
+            if(current == root) {
+                root = child;
+            }
+            else if(parent.getLeftChild() == current) {
+                parent.setLeftChild(child);
+            }
+            else {
+                parent.setRightChild(child);
+            }
+        }
+        //Node has two children.
+        else {
+            Node successor = current.getRightChild();
+            while (successor.getLeftChild() != null) {
+                successor = successor.getLeftChild();
+            }
+            current.setData(successor.getData());
+            remove(successor.getData().getDataKey());
+        }
     }
 
     /**
@@ -81,8 +182,26 @@ public class OrderedDictionary implements OrderedDictionaryADT {
      */
     @Override
     public MammalRecord successor(DataKey k) throws DictionaryException {
-        // Write this method
-        return null; // change this statement
+        Node current = root;
+        Node successor = null;
+
+        while (current != null) {
+            int comparison = current.getData().getDataKey().compareTo(k);
+
+            if (comparison > 0) {
+                successor = current;
+                current = current.getLeftChild();
+            }
+            else {
+                current = current.getRightChild();
+            }
+        }
+
+        if(successor == null) {
+            throw new DictionaryException("No successor found for given key.");
+        }
+
+        return successor.getData();
     }
 
    
@@ -97,8 +216,26 @@ public class OrderedDictionary implements OrderedDictionaryADT {
      */
     @Override
     public MammalRecord predecessor(DataKey k) throws DictionaryException {
-        // Write this method
-        return null; // change this statement
+        Node current = root;
+        Node predecessor = null;
+
+        while (current != null) {
+            int comparison = current.getData().getDataKey().compareTo(k);
+
+            if (comparison < 0) {
+                predecessor = current;
+                current = current.getRightChild();
+            }
+            else {
+                current = current.getLeftChild();
+            }
+        }
+
+        if(predecessor == null) {
+            throw new DictionaryException("No predecessor found for given key.");
+        }
+
+        return predecessor.getData();
     }
 
     /**
@@ -109,8 +246,17 @@ public class OrderedDictionary implements OrderedDictionaryADT {
      */
     @Override
     public MammalRecord smallest() throws DictionaryException {
-        // Write this method
-        return null; // change this statement
+        if(root == null) {
+            throw new DictionaryException("Dictionary is empty.");
+        }
+
+        Node current = root;
+
+        while(current.getLeftChild() != null) {
+            current = current.getLeftChild();
+        }
+
+        return current.getData();
     }
 
     /*
@@ -119,8 +265,17 @@ public class OrderedDictionary implements OrderedDictionaryADT {
      */
     @Override
     public MammalRecord largest() throws DictionaryException {
-        // Write this method
-        return null; // change this statement
+        if(root == null) {
+            throw new DictionaryException("Dictionary is empty.");
+        }
+
+        Node current = root;
+
+        while(current.getRightChild() != null) {
+            current = current.getRightChild();
+        }
+
+        return current.getData();
     }
       
     /* Returns true if the dictionary is empty, and true otherwise. */
