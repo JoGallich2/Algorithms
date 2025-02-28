@@ -178,7 +178,7 @@ public class MammalsController implements Initializable {
 
     public void getSize() {
         switch (this.size.getValue().toString()) {
-            case "Null:":
+            case "Null":
                 this.mammalSize = 0;
                 break;
             case "Small":
