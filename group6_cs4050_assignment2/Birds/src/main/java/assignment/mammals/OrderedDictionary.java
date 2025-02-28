@@ -29,6 +29,7 @@ public class OrderedDictionary implements OrderedDictionaryADT {
             if (comparison == 0) { // key found
                 return current.getData();
             }
+
             if (comparison == 1) {
                 if (current.getLeftChild() == null) {
                     // Key not found

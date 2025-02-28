@@ -27,11 +27,13 @@ public class DataKey {
 	 * than k, and it returns 1 otherwise. 
 	 */
 	public int compareTo(DataKey k) {
+			String thisLower = this.mammalName.toLowerCase();
+			String kLower = k.getMammalName().toLowerCase();
             if (this.getMammalSize() == k.getMammalSize()) {
-                int compare = this.mammalName.compareTo(k.getMammalName());
-                if (compare == 0){
+                int compare = thisLower.compareTo(kLower);
+                if (compare == 0 || thisLower.contains(kLower)) {
                      return 0;
-                } 
+                }
                 else if (compare < 0) {
                     return -1;
                 }
@@ -40,6 +42,6 @@ public class DataKey {
                     return -1;
             }
             return 1;
-            
+
 	}
 }
