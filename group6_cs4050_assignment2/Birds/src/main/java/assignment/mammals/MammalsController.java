@@ -63,6 +63,35 @@ public class MammalsController implements Initializable {
 
     public void find() {
         DataKey key = new DataKey(this.name.getText(), mammalSize);
+        if(mammalSize == 0){
+            int fails = 0;
+            DataKey key1 = new DataKey(this.name.getText(), 1);
+            DataKey key2 = new DataKey(this.name.getText(), 2);
+            DataKey key3 = new DataKey(this.name.getText(), 3);
+            try {
+                mammal = database.find(key1);
+                showMammal();
+            } catch (DictionaryException ex) {
+                fails++;
+            }
+            try {
+                mammal = database.find(key2);
+                showMammal();
+            } catch (DictionaryException ex) {
+                fails++;
+            }
+            try {
+                mammal = database.find(key3);
+                showMammal();
+            } catch (DictionaryException ex) {
+                fails++;
+                if (fails == 3){
+                    displayAlert(ex.getMessage());
+                }
+            }
+
+        }
+
         try {
             mammal = database.find(key);
             showMammal();
@@ -149,6 +178,9 @@ public class MammalsController implements Initializable {
 
     public void getSize() {
         switch (this.size.getValue().toString()) {
+            case "Null:":
+                this.mammalSize = 0;
+                break;
             case "Small":
                 this.mammalSize = 1;
                 break;
@@ -306,7 +338,7 @@ public class MammalsController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         database = new OrderedDictionary();
         size.setItems(FXCollections.observableArrayList(
-                "Small", "Medium", "Large"
+                "Null","Small", "Medium", "Large"
         ));
         size.setValue("Small");
     }

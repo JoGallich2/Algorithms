@@ -31,7 +31,7 @@ public class DataKey {
 			String kLower = k.getMammalName().toLowerCase();
             if (this.getMammalSize() == k.getMammalSize()) {
                 int compare = thisLower.compareTo(kLower);
-                if (compare == 0 || thisLower.contains(kLower)) {
+                if (compare == 0 || thisLower.startsWith(kLower)) {
                      return 0;
                 }
                 else if (compare < 0) {
