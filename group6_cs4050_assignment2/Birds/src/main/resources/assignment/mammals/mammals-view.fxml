@@ -63,7 +63,7 @@
                     <children>
                         <Label fx:id="title" prefHeight="27.0" prefWidth="408.0" text="Label" textFill="#0521f5">
                             <VBox.margin>
-                                <Insets bottom="20.0" left="40.0" top="40.0" />
+                                <Insets left="40.0"/>
                             </VBox.margin>
                             <font>
                                 <Font name="System Bold" size="20.0" />
@@ -80,12 +80,12 @@
                             </font>
                         </Label>
 
-                        <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="795.0">
+                        <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="795.0">
                             <VBox.margin>
-                                <Insets bottom="20.0" left="40.0" right="40.0" />
+                                <Insets left="40.0" right="40.0" />
                             </VBox.margin>
                             <children>
-                                <Label fx:id="about" alignment="TOP_LEFT" prefHeight="106.0" prefWidth="646.0" text="Label" textAlignment="JUSTIFY" textFill="#0521f5" wrapText="true">
+                                <Label fx:id="about" alignment="TOP_LEFT" prefHeight="150.0" prefWidth="646.0" text="Label" textAlignment="JUSTIFY" textFill="#0521f5" wrapText="true">
                                     <font>
                                         <Font name="System Italic" size="15.0" />
                                     </font></Label>
