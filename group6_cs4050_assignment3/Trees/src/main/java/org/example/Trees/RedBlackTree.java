@@ -28,8 +28,19 @@ public class RedBlackTree<T extends Comparable<T>> implements Tree<T>, Serializa
     public void insert(T value) {
         Node newNode = new Node(value);
         root = insert(root, newNode);
-        redBlackify(newNode);
-        size++;
+        //If new node is root, just insert as black.
+        if(newNode == root) {
+            root.isRed = false;
+            size++;
+        }
+        //If parent of new node is black, do nothing.
+        else if(newNode.parent != null && !newNode.parent.isRed) {
+            size++;
+        }
+        else {
+            redBlackify(newNode);
+            size++;
+        }
     }
 
     private Node insert(Node root, Node newNode) {
@@ -181,6 +192,7 @@ public class RedBlackTree<T extends Comparable<T>> implements Tree<T>, Serializa
     private Node deleteNode(Node node) {
         //If node has no children.
         if(node.left == null && node.right == null) {
+            Node sibling;
             if(node == root) {
                 root = null;
                 return null;
@@ -195,11 +207,42 @@ public class RedBlackTree<T extends Comparable<T>> implements Tree<T>, Serializa
 
             if(parent.left != null && parent.left == node) {
                 parent.left = null;
+                sibling = parent.right;
             }
             else {
                 parent.right = null;
+                sibling = parent.left;
             }
-            return parent;
+            if(node.isRed) {
+                return null;
+            }
+            //Handle double black.
+            else {
+                //If parent red, sibling black
+                if(sibling != null && !sibling.isRed && parent.isRed) {
+                    //If sibling has children.
+                    if(sibling.left != null || sibling.right != null) {
+                        parent.isRed = false;
+                        sibling.isRed = true;
+                        //Does parent have a parent?
+                        if(parent.parent != null) {
+                            //If so, make the sibling red if it exists.
+                            Node parentSibling = (parent == parent.parent.left) ? parent.parent.right : parent.parent.left;
+                            if(parentSibling != null) {
+                                parentSibling.isRed = true;
+                            }
+                        }
+                    }
+                    //Sibling has no children.
+                    else {
+                        parent.isRed = false;
+                        sibling.isRed = true;
+                    }
+                }
+                //else? always return parent or only sometimes?
+                return parent;
+            }
+
         }
 
         //If the node has two children.
@@ -248,15 +291,15 @@ public class RedBlackTree<T extends Comparable<T>> implements Tree<T>, Serializa
     }
 
 
-    private Node getSibling(Node node) {
-        Node parent = node.parent;
-        if (node == parent.left) {
-            return parent.right;
-        }
-        else {
-            return parent.left;
-        }
-    }
+//    private Node getSibling(Node node) {
+//        Node parent = node.parent;
+//        if (node == parent.left) {
+//            return parent.right;
+//        }
+//        else {
+//            return parent.left;
+//        }
+//    }
 
     private void redBlackifyDelete(Node node) {
         while (node != root && !node.isRed) {
@@ -278,7 +321,7 @@ public class RedBlackTree<T extends Comparable<T>> implements Tree<T>, Serializa
                     sibling.isRed = false;
                     node.parent.isRed = true;
                     rotateLeft(node.parent);
-                    sibling = node.parent.right;
+                    sibling = (node.parent.left == node) ? node.parent.right : node.parent.left;
                 }
 
                 if ((sibling.left == null || !sibling.left.isRed) &&
@@ -294,7 +337,7 @@ public class RedBlackTree<T extends Comparable<T>> implements Tree<T>, Serializa
                         }
                         sibling.isRed = true;
                         rotateRight(sibling);
-                        sibling = node.parent.right;
+                        sibling = (node.parent.left == node) ? node.parent.right : node.parent.left;
                     }
 
                     // Sibling's right child is red. Recolor sibling and parent, then rotate.
@@ -320,9 +363,13 @@ public class RedBlackTree<T extends Comparable<T>> implements Tree<T>, Serializa
                     sibling.isRed = false;
                     node.parent.isRed = true;
                     rotateRight(node.parent);
-                    sibling = node.parent.left;
+                    sibling = (node.parent.left == node) ? node.parent.right : node.parent.left;
                 }
 
+                //Does this if make any sense?
+                //if(sibling == null) {
+                //    continue;
+                //}
                 if ((sibling.left == null || !sibling.left.isRed) &&
                         (sibling.right == null || !sibling.right.isRed)) {
                     // Sibling and its children are black
@@ -336,7 +383,7 @@ public class RedBlackTree<T extends Comparable<T>> implements Tree<T>, Serializa
                         }
                         sibling.isRed = true;
                         rotateLeft(sibling);
-                        sibling = node.parent.left;
+                        sibling = (node.parent.left == node) ? node.parent.right : node.parent.left;
                     }
 
                     // Sibling's left child is red.
