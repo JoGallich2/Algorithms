@@ -10,6 +10,7 @@ public class RedBlackTree<T extends Comparable<T>> implements Tree<T>, Serializa
     private Node root;
     private int size;
 
+
     private Node find(Node root, T value) {
         if(root == null) {
             return null;
@@ -25,6 +26,7 @@ public class RedBlackTree<T extends Comparable<T>> implements Tree<T>, Serializa
         }
     }
 
+    @Override
     public void insert(T value) {
         Node newNode = new Node(value);
         root = insert(root, newNode);
@@ -63,8 +65,9 @@ public class RedBlackTree<T extends Comparable<T>> implements Tree<T>, Serializa
     private void redBlackify(Node node) {
         Node parent = node.parent;
 
-        //Case 1: parent is null.
-        if(parent == null) {
+        //Case 1: node is the root.
+        if(root == node) {
+            node.isRed = false;
             return;
         }
 
@@ -96,40 +99,31 @@ public class RedBlackTree<T extends Comparable<T>> implements Tree<T>, Serializa
             uncle.isRed = false;
 
             redBlackify(grandparent);
+            return;
         }
-        //Parent is left child of grandparent.
-        else if(parent == grandparent.left) {
-            //Case 4.1: Uncle is black and node is left->right of grandparent.
-            if(node == parent.right) {
-                rotateLeft(parent);
-
-                parent = node;
-            }
-
-            //Case 5.1: Uncle black and node is left->left of grandparent.
-            rotateRight(grandparent);
-
-            //Recolor parent and grandparent.
-            parent.isRed = false;
-            grandparent.isRed = true;
+        //Checks left->right and right->left.
+        if(parent == grandparent.left && node == parent.right) {
+            rotateLeft(parent);
+            parent = node;
+            node = parent.left;
         }
-        //Parent is the right child of grandparent.
-        else {
-            //Case 4.2: Uncle is black and node is right->left of grandparent.
-            if (node == parent.left) {
+        else if (parent == grandparent.right && node == parent.left) {
                 rotateRight(parent);
-
                 parent = node;
-            }
-
-            //Case 5.2: Uncle is black and node is right->right of grandparent.
-            rotateLeft(grandparent);
-
-            parent.isRed = false;
-            grandparent.isRed = true;
+                node = parent.right;
         }
 
-        root.isRed = false;
+        //Recolor parent and grandparent.
+        parent.isRed = false;
+        grandparent.isRed = true;
+
+        //Checks left->left and right->right.
+        if (node == parent.left && parent == grandparent.left) {
+            rotateRight(grandparent);
+        }
+        else {
+            rotateLeft(grandparent);
+        }
     }
 
     private void rotateLeft(Node node) {
@@ -154,7 +148,6 @@ public class RedBlackTree<T extends Comparable<T>> implements Tree<T>, Serializa
     }
 
     private void rotateRight(Node node) {
-
         Node leftChild = node.left;
         node.left = leftChild.right;
         if(leftChild.right != null) {
@@ -174,232 +167,228 @@ public class RedBlackTree<T extends Comparable<T>> implements Tree<T>, Serializa
         node.parent = leftChild;
     }
 
+    private Node findMin(Node node) {
+        while (node.left != null) {
+            node = node.left;
+        }
+        return node;
+    }
+
+    @Override
     public boolean delete(T value) {
-        //First implementation
-        Node node = find(root, value);
-        if(node == null) {
+        if (root == null) {
             return false;
         }
 
-        Node nodeToFix = deleteNode(node);
-        if(nodeToFix != null) {
-            redBlackifyDelete(nodeToFix);
+        // Find the node to delete
+        Node nodeToDelete = find(root, value);
+        if (nodeToDelete == null) {
+            return false; // Node not found
         }
+
+        Node replacementNode;
+        Node childNode;
+
+        // Case when node has at most one non-null child
+        if (nodeToDelete.left == null || nodeToDelete.right == null) {
+            replacementNode = nodeToDelete;
+        } else {
+            // Node has two children, find the in-order successor
+            replacementNode = findMin(nodeToDelete.right);
+        }
+
+        // Get the child of replacementNode
+        if (replacementNode.left != null) {
+            childNode = replacementNode.left;
+        } else {
+            childNode = replacementNode.right;
+        }
+
+        // Update parent reference for childNode
+        if (childNode != null) {
+            childNode.parent = replacementNode.parent;
+        }
+
+        // Update replacementNode's parent to point to childNode
+        if (replacementNode.parent == null) {
+            // replacementNode is the root
+            root = childNode;
+        } else if (replacementNode == replacementNode.parent.left) {
+            replacementNode.parent.left = childNode;
+        } else {
+            replacementNode.parent.right = childNode;
+        }
+
+        // If we're deleting a node with two children, copy the successor's value
+        if (replacementNode != nodeToDelete) {
+            nodeToDelete.value = replacementNode.value;
+        }
+
+        // If we removed a BLACK node, we need to fix violations
+        if (!replacementNode.isRed) {
+            redBlackifyDelete(childNode, replacementNode.parent);
+        }
+
         size--;
         return true;
     }
 
-    private Node deleteNode(Node node) {
-        //If node has no children.
-        if(node.left == null && node.right == null) {
-            Node sibling;
-            if(node == root) {
-                root = null;
-                return null;
-            }
-            Node parent;
-            if(node.parent != null) {
-                parent = node.parent;
-            }
-            else {
-                parent = node;
-            }
-
-            if(parent.left != null && parent.left == node) {
-                parent.left = null;
-                sibling = parent.right;
-            }
-            else {
-                parent.right = null;
-                sibling = parent.left;
-            }
-            if(node.isRed) {
-                return null;
-            }
-            //Handle double black.
-            else {
-                //If parent red, sibling black
-                if(sibling != null && !sibling.isRed && parent.isRed) {
-                    //If sibling has children.
-                    if(sibling.left != null || sibling.right != null) {
-                        parent.isRed = false;
-                        sibling.isRed = true;
-                        //Does parent have a parent?
-                        if(parent.parent != null) {
-                            //If so, make the sibling red if it exists.
-                            Node parentSibling = (parent == parent.parent.left) ? parent.parent.right : parent.parent.left;
-                            if(parentSibling != null) {
-                                parentSibling.isRed = true;
-                            }
-                        }
-                    }
-                    //Sibling has no children.
-                    else {
-                        parent.isRed = false;
-                        sibling.isRed = true;
-                    }
-                }
-                //else? always return parent or only sometimes?
-                return parent;
-            }
-
-        }
-
-        //If the node has two children.
-        if(node.left != null && node.right != null) {
-            Node successor = node.right;
-            while (successor.left != null) {
-                successor = successor.left;
-            }
-            node.value = successor.value;
-            return deleteNode(successor);
-        }
-        //Node has one child.
-        Node child;
-        if(node.left != null) {
-            child = node.left;
-        }
-        else {
-            child = node.right;
-        }
-
-        if(node.parent == null) {
-            root = child;
-        }
-        else if (node == node.parent.left) {
-            node.parent.left = child;
-        }
-        else {
-            node.parent.right = child;
-        }
-
-        if(child != null) {
-            child.parent = node.parent;
-        }
-
-        if(!node.isRed) {
-            if(child != null) {
-                return child;
-            }
-            else {
-                return node;
-            }
-        }
-
-        //Does not need to be red-black balanced.
-        return null;
-    }
-
-
-//    private Node getSibling(Node node) {
-//        Node parent = node.parent;
-//        if (node == parent.left) {
-//            return parent.right;
-//        }
-//        else {
-//            return parent.left;
-//        }
-//    }
-
-    private void redBlackifyDelete(Node node) {
-        while (node != root && !node.isRed) {
-            if (node.parent == null) {
+    private void redBlackifyDelete(Node node, Node parent) {
+        while (node != root && (node == null || !node.isRed)) {
+            if (node == null) {
                 break;
             }
 
-            // If node is left child.
-            if (node == node.parent.left) {
-                Node sibling = node.parent.right;
+            Node sibling;
 
-                if (sibling == null) {
-                    node = node.parent;
-                    continue;
-                }
+            if (node == parent.left) {
+                sibling = parent.right;
 
+                //Case 1: Sibling is red.
                 if (sibling.isRed) {
-                    // Sibling is red. Recolor sibling and parent, and rotate to make sibling black.
                     sibling.isRed = false;
-                    node.parent.isRed = true;
-                    rotateLeft(node.parent);
-                    sibling = (node.parent.left == node) ? node.parent.right : node.parent.left;
+                    parent.isRed = true;
+                    rotateLeft(parent);
+                    sibling = parent.right;
                 }
 
-                if ((sibling.left == null || !sibling.left.isRed) &&
-                        (sibling.right == null || !sibling.right.isRed)) {
-                    // Sibling and its children are black. Make sibling red, then go to parent to fix higher up the tree.
+                //Case 2: Sibling is black and both its children are black.
+                if (!sibling.isRed && !sibling.right.isRed) {
                     sibling.isRed = true;
-                    node = node.parent;
+                    node = parent;
+                    parent = node.parent;
                 } else {
-                    if (sibling.right == null || !sibling.right.isRed) {
-                        // Sibling's right child is black. Recolor sibling and the left child, then rotate.
+                    //Case 3: Sibling is black, left child is red, right child is black.
+                    if (!sibling.right.isRed) {
                         if (sibling.left != null) {
                             sibling.left.isRed = false;
                         }
                         sibling.isRed = true;
                         rotateRight(sibling);
-                        sibling = (node.parent.left == node) ? node.parent.right : node.parent.left;
+                        sibling = parent.right;
                     }
 
-                    // Sibling's right child is red. Recolor sibling and parent, then rotate.
-                    sibling.isRed = node.parent.isRed;
-                    node.parent.isRed = false;
+                    //Case 4: Sibling is black, right child is red.
+                    sibling.isRed = parent.isRed;
+                    parent.isRed = false;
                     if (sibling.right != null) {
                         sibling.right.isRed = false;
                     }
-                    rotateLeft(node.parent);
-                    node = root;
+                    rotateLeft(parent);
+                    node = root; //Breaks loop.
                 }
-            } else {
-                // Same cases as above but checking for the right child.
-                Node sibling = node.parent.left;
+            } else { //Same cases but switch left and right.
+                sibling = parent.left;
 
-                if (sibling == null) {
-                    node = node.parent;
-                    continue;
-                }
-
+                //Case 1: Sibling is red.
                 if (sibling.isRed) {
-                    // Sibling is red
                     sibling.isRed = false;
-                    node.parent.isRed = true;
-                    rotateRight(node.parent);
-                    sibling = (node.parent.left == node) ? node.parent.right : node.parent.left;
+                    parent.isRed = true;
+                    rotateRight(parent);
+                    sibling = parent.left;
                 }
 
-                //Does this if make any sense?
-                //if(sibling == null) {
-                //    continue;
-                //}
-                if ((sibling.left == null || !sibling.left.isRed) &&
-                        (sibling.right == null || !sibling.right.isRed)) {
-                    // Sibling and its children are black
+                //Case 2: Sibling is black and both its children are black.
+                if (!sibling.right.isRed && !sibling.left.isRed) {
                     sibling.isRed = true;
-                    node = node.parent;
+                    node = parent;
+                    parent = node.parent;
                 } else {
-                    if (sibling.left == null || !sibling.left.isRed) {
-                        // Sibling's left child is black
+                    //Case 3: Sibling is black, right child is red, left child is black.
+                    if (!sibling.left.isRed) {
                         if (sibling.right != null) {
                             sibling.right.isRed = false;
                         }
                         sibling.isRed = true;
                         rotateLeft(sibling);
-                        sibling = (node.parent.left == node) ? node.parent.right : node.parent.left;
+                        sibling = parent.left;
                     }
 
-                    // Sibling's left child is red.
-                    sibling.isRed = node.parent.isRed;
-                    node.parent.isRed = false;
+                    //Case 4: Sibling is black, left child is red.
+                    sibling.isRed = parent.isRed;
+                    parent.isRed = false;
                     if (sibling.left != null) {
                         sibling.left.isRed = false;
                     }
-                    rotateRight(node.parent);
-                    node = root;
+                    rotateRight(parent);
+                    node = root; //Breaks loop.
                 }
             }
         }
-        node.isRed = false;
+
+        //Make sure root black.
+        if (node != null) {
+            node.isRed = false;
+        }
     }
 
+
+    private void fixDoubleBlack(Node node) {
+        if(node.isRed) {
+            return;
+        }
+        if(node == root) {
+            return;
+        }
+
+        Node parent;
+        if(node.parent != null) {
+            parent = node.parent;
+        }
+        else {
+            parent = node;
+        }
+
+        Node sibling;
+        if(parent.left != null && parent.left == node) {
+            parent.left = null;
+            sibling = parent.right;
+        }
+        else {
+            parent.right = null;
+            sibling = parent.left;
+        }
+
+        //Handle double black.
+        //Case 1: sibling is red, children are either black or null. Turns into either case 2, 3, or 4.
+        if((sibling != null && sibling.isRed)) {
+            parent.isRed = false;
+            sibling.isRed = true;
+            rotateLeft(parent);
+
+            sibling = parent.left == node ? parent.right : parent.left;
+            node = sibling.parent;
+        }
+        //Case 2: sibling is black and the right child is red.
+        if((sibling != null && !sibling.isRed) && (sibling.right != null && sibling.right.isRed)) {
+            sibling.isRed = true;
+            parent.isRed = false;
+            rotateRight(parent);
+            return;
+        }
+        //Case 3: Sibling is black and both children are black
+        if((sibling != null && !sibling.isRed) && (sibling.left == null || !sibling.left.isRed) && (sibling.right == null || !sibling.right.isRed)) {
+            sibling.isRed = true;
+            if(parent.isRed) {
+                parent.isRed = false;
+                return;
+            }
+            else {
+                fixDoubleBlack(parent);
+                return;
+            }
+        }
+        //Case 4: sibling is black, the right child is black, the left child is red.
+        if((sibling != null && !sibling.isRed) && (sibling.right == null || !sibling.right.isRed) && (sibling.left != null && sibling.left.isRed)) {
+            sibling.isRed = true;
+            sibling.left.isRed = false;
+            rotateRight(sibling);
+            fixDoubleBlack(sibling.parent);
+            return;
+        }
+    }
+
+    @Override
     public boolean contains(T value) {
         return contains(root, value);
     }
@@ -419,15 +408,18 @@ public class RedBlackTree<T extends Comparable<T>> implements Tree<T>, Serializa
         }
     }
 
+    @Override
     public void clear() {
         root = null;
         size = 0;
     }
 
+    @Override
     public int size() {
         return size;
     }
 
+    @Override
     public List<T> inorderTraversal() {
         List<T> result = new ArrayList<>();
         inorderTraversal(root, result);
