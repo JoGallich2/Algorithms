@@ -1,9 +1,10 @@
 import java.util.*;
 
 public class Graph {
-    private final int V;
-    private final Map<Integer, List<Edge>> adj;
+    private final int V; //Holds the total amount of vertices in the graph.
+    private final Map<Integer, List<Edge>> adj; //Holds the edges for each vertex.
 
+    //Constructor class.
     public Graph(int vertices) {
         this.V = vertices;
         adj = new HashMap<>();
@@ -12,11 +13,13 @@ public class Graph {
         }
     }
 
+    //Adds an edge to the graph.
     public void addEdge(int u, int v, double w) {
         adj.get(u).add(new Edge(v, w));
         adj.get(v).add(new Edge(u, w));
     }
 
+    //Prints the adjacency list.
     public void printAdjList() {
         System.out.println("Adjacency List:");
         for (int u : adj.keySet()) {
@@ -26,11 +29,23 @@ public class Graph {
         }
     }
 
+    //Performs Prim's algorithm on the graph. Prints the edges in the minimum spanning tree.
+
+    //Maybe I should keep a local hashmap for edges and add to them over the course of the algorithm?
+    //Might prevent my issue with not eliminating certain edges (or maybe I should change the fact that
+    //they seem to be two-way and not one-way.
     public void primMST() {
+        // TODO: Some edges are not properly being relaxed. Plus it seems that the example
+        //  wants some of the edges to point backwards and I guess they don't do that right now?
+        //  Example: I fixed 20 and 10 pointing to each other (edge relaxed) but not 6 -> 12.
+
+
         //Distances for the vertices. Set vertex 1 to be the start.
         double[] distances = new double[V];
         Arrays.fill(distances, Double.MAX_VALUE);
         distances[0] = 0;
+
+        Map<Integer, List<Edge>> adjCopy = new HashMap<>(adj);
 
         //Creates a new Heap (minimum spanning tree) for use as a queue and fills it with placeholders.
         Heap mst = new Heap();
@@ -46,7 +61,7 @@ public class Graph {
             mst.delete_min();
 
             //For every edge the vertex is connected to...
-            for (Edge e : adj.get(u)) {
+            for (Edge e : adjCopy.get(u)) {
                 //Get the information about the edge.
                 int v = e.getTo();
                 double weight = e.getWeight();
@@ -59,6 +74,10 @@ public class Graph {
                     mst.decrease_key(v, weight);
 
                     mstEdges.add(u + " -> " + v + ". Weight: " + weight);
+                }
+                else {
+                    //Relax (remove) the edge.
+                    adjCopy.get(v).remove(e);
                 }
             }
         }
