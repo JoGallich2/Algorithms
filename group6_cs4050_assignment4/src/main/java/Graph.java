@@ -90,10 +90,16 @@ public class Graph {
 
         //Print the output of the function.
         System.out.println("MST edges (u -> v. Weight):");
-        for (int v = 1; v < V; v++) {
-            if (parents[v] != -1) {
-                System.out.println(parents[v] + " -> " + (v + 1) + ". Weight: " + distances[v]);
+        for (int u = 1; u <= V; u++) {
+            System.out.print(u);
+            for (int v = 1; v < V; v++) {
+                if (parents[v] == u) {
+                    System.out.print(" --> (" + (v + 1) + ", " + distances[v] + ")");
+                } else if (parents[u - 1] == v + 1) {
+                    System.out.print(" --> (" + (v + 1) + ", " + distances[u - 1] + ")");
+                }
             }
+            System.out.println();
         }
     }
 
