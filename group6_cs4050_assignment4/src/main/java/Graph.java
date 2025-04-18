@@ -93,10 +93,14 @@ public class Graph {
         for (int u = 1; u <= V; u++) {
             System.out.print(u);
             for (int v = 1; v < V; v++) {
+                //System.out.print(" Test - " + v +"" + u + "" + parents[v] + "" + parents[u-1] + " ");
                 if (parents[v] == u) {
                     System.out.print(" --> (" + (v + 1) + ", " + distances[v] + ")");
                 } else if (parents[u - 1] == v + 1) {
                     System.out.print(" --> (" + (v + 1) + ", " + distances[u - 1] + ")");
+                }
+                else if (parents[u - 1] == v && v == 1) {
+                    System.out.print(" --> (" + (v) + ", " + distances[u - 1] + ")");
                 }
             }
             System.out.println();
