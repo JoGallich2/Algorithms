@@ -29,6 +29,7 @@ public class Graph {
     public void primMST() {
         // TODO: Write the program to implement Prim MST
 
+
         //Distances for the vertices. Set vertex 1 to be the start.
         double[] distances = new double[V];
         Arrays.fill(distances, Double.MAX_VALUE);
@@ -61,7 +62,7 @@ public class Graph {
         }
 
         System.out.println("MST edges -> (u -> v. Weight):");
-        for(int i = 1; i <= V; i++) {
+        for(int i = 2; i <= V; i++) {
             System.out.println(parent[i-1] + " -> " + i + ". Weight = " + distances[i-1]);
         }
     }

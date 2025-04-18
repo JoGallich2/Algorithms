@@ -23,7 +23,7 @@ public class Heap {
     public boolean in_heap(int id){
         // TODO: returns true if the element whose id is id is in the heap;
         for(Node n : heap){
-            if(n.key == id){
+            if(n.id == id){
                 return true;
             }
         }
@@ -82,6 +82,12 @@ public class Heap {
 
     public boolean isEmpty() {
         return heap.isEmpty();
+    }
+
+    public void printHeap() {
+        for(Node n : heap){
+            System.out.println(n.id + " " + n.key);
+        }
     }
 
     private static class Node {
