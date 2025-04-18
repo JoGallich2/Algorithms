@@ -27,43 +27,46 @@ public class Graph {
     }
 
     public void primMST() {
-        // TODO: Write the program to implement Prim MST
-
-
         //Distances for the vertices. Set vertex 1 to be the start.
         double[] distances = new double[V];
         Arrays.fill(distances, Double.MAX_VALUE);
         distances[0] = 0;
 
-        //Creates a new Heap (minimum spanning tree) and fills it with placeholders.
+        //Creates a new Heap (minimum spanning tree) for use as a queue and fills it with placeholders.
         Heap mst = new Heap();
         mst.heap_ini(distances, V);
 
-        //Keep track of vertex parents.
-        int[] parent = new int[V];
-        Arrays.fill(parent, -1);
+        //List for printing messages for output.
+        List<String> mstEdges = new ArrayList<>();
 
-
+        //Iterate until the queue is empty
         while(!mst.isEmpty()) {
+            //Get the vertex with the minimum key and remove it from the queue.
             int u = mst.min_id();
             mst.delete_min();
 
+            //For every edge the vertex is connected to...
             for (Edge e : adj.get(u)) {
+                //Get the information about the edge.
                 int v = e.getTo();
                 double weight = e.getWeight();
 
+                //If the edge connected vertex is in the heap and the weight is less than the stored distance for that vertex,
+                //store the weight, change the weight of the vertex in the queue, and add the message to be printed about the edge.
                 if(mst.in_heap(v) && weight < distances[v - 1]) {
                     distances[v - 1] = weight;
-                    parent[v - 1] = u;
 
                     mst.decrease_key(v, weight);
+
+                    mstEdges.add(u + " -> " + v + ". Weight: " + weight);
                 }
             }
         }
 
-        System.out.println("MST edges -> (u -> v. Weight):");
-        for(int i = 2; i <= V; i++) {
-            System.out.println(parent[i-1] + " -> " + i + ". Weight = " + distances[i-1]);
+        //Print the output of the function.
+        System.out.println("MST edges (u -> v. Weight):");
+        for(String s : mstEdges) {
+            System.out.println(s);
         }
     }
 
