@@ -74,7 +74,7 @@ public class Heap {
         // TODO: sets the key of the element whose id is id to new_key if its current key
         //    is greater than new_key.
         for(Node n : heap){
-            if(n.id == id){
+            if(n.id == id && n.key > new_key){
                 n.key = new_key;
             }
         }

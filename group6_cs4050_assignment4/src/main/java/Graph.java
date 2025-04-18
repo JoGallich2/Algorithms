@@ -29,7 +29,11 @@ public class Graph {
     public void primMST() {
         //Distances for the vertices. Set vertex 1 to be the start.
         double[] distances = new double[V];
+        int[] parents = new int[V];
+        boolean[] inMST = new boolean[V];
+
         Arrays.fill(distances, Double.MAX_VALUE);
+        Arrays.fill(parents, -1);
         distances[0] = 0;
 
         //Creates a new Heap (minimum spanning tree) for use as a queue and fills it with placeholders.
@@ -44,6 +48,7 @@ public class Graph {
             //Get the vertex with the minimum key and remove it from the queue.
             int u = mst.min_id();
             mst.delete_min();
+            inMST[u-1] = true;
 
             //For every edge the vertex is connected to...
             for (Edge e : adj.get(u)) {
@@ -53,8 +58,9 @@ public class Graph {
 
                 //If the edge connected vertex is in the heap and the weight is less than the stored distance for that vertex,
                 //store the weight, change the weight of the vertex in the queue, and add the message to be printed about the edge.
-                if(mst.in_heap(v) && weight < distances[v - 1]) {
+                if (mst.in_heap(v) && !inMST[v - 1] && weight < distances[v - 1]) {
                     distances[v - 1] = weight;
+                    parents[v - 1] = u;
 
                     mst.decrease_key(v, weight);
 
@@ -65,8 +71,10 @@ public class Graph {
 
         //Print the output of the function.
         System.out.println("MST edges (u -> v. Weight):");
-        for(String s : mstEdges) {
-            System.out.println(s);
+        for (int v = 1; v < V; v++) {
+            if (parents[v] != -1) {
+                System.out.println(parents[v] + " -> " + (v + 1) + ". Weight: " + distances[v]);
+            }
         }
     }
 
