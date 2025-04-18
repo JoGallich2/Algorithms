@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+//Driver code for the heap and graph classes with the provided text file.
 public class Main {
     public static void main(String[] args) {
         try {
