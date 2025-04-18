@@ -14,8 +14,8 @@ public class Heap {
     }
 
 
-    public void heap_ini(int[] keys, int n){
-        // TODO: nitializes a heap with the array keys of n elements indexed from 1 to n, where
+    public void heap_ini(double[] keys, int n){
+        // TODO: Initializes a heap with the array keys of n elements indexed from 1 to n, where
         //  key[i] is the key of the element whose id is i.
     }
 
@@ -25,7 +25,7 @@ public class Heap {
         return false;
     }
 
-    public int min_key(){
+    public double min_key(){
         // TODO: returns the minimum key of the heap;
 
         return 0;
@@ -37,7 +37,7 @@ public class Heap {
         return 0;
     }
 
-    public int key(int id){
+    public double key(int id){
         // TODO: returns the key of the element whose id is id in the heap;
 
         return 0;
@@ -47,15 +47,20 @@ public class Heap {
         // TODO: deletes the element with minimum key from the heap;
     }
 
-    public void decrease_key(int id, int new_key){
+    public void decrease_key(int id, double new_key){
         // TODO: sets the key of the element whose id is id to new_key if its current key
         //    is greater than new_key.
     }
 
-    private static class Node {
-        int id, key;
+    public boolean isEmpty() {
+        return heap.isEmpty();
+    }
 
-        Node(int id, int key) {
+    private static class Node {
+        int id;
+        double key;
+
+        Node(int id, double key) {
             this.id = id;
             this.key = key;
         }
