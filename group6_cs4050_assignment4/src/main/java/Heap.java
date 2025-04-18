@@ -67,11 +67,7 @@ public class Heap {
     public void delete_min() {
         // TODO: deletes the element with minimum key from the heap;
         int minId = min_id();
-        for(Node n : heap){
-            if(n.id == minId){
-                heap.remove(n);
-            }
-        }
+        heap.removeIf(n -> n.id == minId);
     }
 
     public void decrease_key(int id, double new_key){

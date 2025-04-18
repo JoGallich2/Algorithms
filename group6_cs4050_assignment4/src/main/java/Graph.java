@@ -32,7 +32,7 @@ public class Graph {
         //Distances for the vertices. Set vertex 1 to be the start.
         double[] distances = new double[V];
         Arrays.fill(distances, Double.MAX_VALUE);
-        distances[1 - 1] = 0;
+        distances[0] = 0;
 
         //Creates a new Heap (minimum spanning tree) and fills it with placeholders.
         Heap mst = new Heap();
@@ -44,7 +44,7 @@ public class Graph {
 
 
         while(!mst.isEmpty()) {
-            int u = mst.min_id() + 1;
+            int u = mst.min_id();
             mst.delete_min();
 
             for (Edge e : adj.get(u)) {
@@ -53,7 +53,7 @@ public class Graph {
 
                 if(mst.in_heap(v) && weight < distances[v - 1]) {
                     distances[v - 1] = weight;
-                    parent[v] = u;
+                    parent[v - 1] = u;
 
                     mst.decrease_key(v, weight);
                 }
