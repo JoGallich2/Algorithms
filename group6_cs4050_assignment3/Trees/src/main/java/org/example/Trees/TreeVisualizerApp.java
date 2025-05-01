@@ -11,7 +11,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 
-public class TreeVisualizerApp extends Application {
+public class eTreeVisualizerApp extends Application {
 
     public static void main(String[] args) {
         launch(args);
