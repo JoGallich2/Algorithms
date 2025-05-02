@@ -6,7 +6,8 @@ public class Main {
         System.out.println("Solving Sudoku");
         Sudoku sudoku = new Sudoku();
         try {
-            sudoku.loadBoard("/Users/grabnerv/Developer/CS4050/group6_cs4050_assignment5/src/sudoku.txt");
+            //Make sure to change this path to the path on your machine to the sudoku.txt file.
+            sudoku.loadBoard("/Users/Windol/Desktop/College Classes/CS_4050/Analysis-of-Algorithms---Group6/group6_cs4050_assignment5/src/sudoku.txt");
             sudoku.solve();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
